@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Thuê bao Cloud</title>
+</head>
+<body>
+    <h1>Ứng dụng Quản lý Thuê bao Cloud</h1>
+    <p>Vui lòng nhấn <b>F12</b> hoặc <b>Ctrl + Shift + I</b> và mở tab <b>Console</b> để xem kết quả hiển thị bảng của ứng dụng.</p>
+    <p>Tương tác bằng các hộp thoại (prompt) bật lên trên màn hình.</p>
+
+    <script>
+        let subscriptions = [
+            { id: "SUB_001", name: "Nguyen Van A", plan: "PERSONAL", deviceLimit: 1 },
+            { id: "SUB_002", name: "Tran Thi B", plan: "FAMILY", deviceLimit: 5 },
+            { id: "SUB_003", name: "Le Van C", plan: "PERSONAL", deviceLimit: 1 }
+        ];
+
+        function listSubscriptions() {
+            console.log("\n--- DANH SACH THUE BAO ---");
+            if (subscriptions.length === 0) {
+                console.log("Danh sach thue bao trong.");
+            } else {
+                console.table(subscriptions);
+            }
+        }
+
+        function addSubscription() {
+            console.log("\n--- THEM THUE BAO MOI ---");
+            let name = prompt("Nhap ten khach hang: ");
+            if (!name) return;
+            
+            let planChoice = prompt("Chon goi cuoc (1: PERSONAL, 2: FAMILY): ");
+            let plan = "PERSONAL";
+            let deviceLimit = 1;
+
+            if (planChoice === "2") {
+                plan = "FAMILY";
+                deviceLimit = 5;
+            }
+
+            let lastIdNum = 0;
+            if (subscriptions.length > 0) {
+                let lastId = subscriptions[subscriptions.length - 1].id;
+                lastIdNum = parseInt(lastId.split('_')[1]);
+            }
+            let newId = "SUB_" + String(lastIdNum + 1).padStart(3, '0');
+
+            subscriptions.push({ id: newId, name: name, plan: plan, deviceLimit: deviceLimit });
+            console.log(`=> Da them thanh cong thue bao ${newId}!`);
+        }
+
+        function updateSubscription() {
+            console.log("\n--- CAP NHAT GOI CUOC ---");
+            let id = prompt("Nhap ma thue bao can cap nhat (VD: SUB_001): ");
+            let index = subscriptions.findIndex(sub => sub.id === id);
+
+            if (index !== -1) {
+                let planChoice = prompt("Chon goi cuoc moi (1: PERSONAL, 2: FAMILY): ");
+                if (planChoice === "1") {
+                    subscriptions[index].plan = "PERSONAL";
+                    subscriptions[index].deviceLimit = 1;
+                    console.log(`=> Da cap nhat ${id} thanh goi PERSONAL.`);
+                } else if (planChoice === "2") {
+                    subscriptions[index].plan = "FAMILY";
+                    subscriptions[index].deviceLimit = 5;
+                    console.log(`=> Da cap nhat ${id} thanh goi FAMILY.`);
+                } else {
+                    console.log("=> Lua chon khong hop le!");
+                }
+            } else {
+                console.log("=> Khong tim thay ma thue bao!");
+            }
+        }
+
+        function deleteSubscription() {
+            console.log("\n--- HUY THUE BAO ---");
+            let id = prompt("Nhap ma thue bao can huy (VD: SUB_001): ");
+            let index = subscriptions.findIndex(sub => sub.id === id);
+
+            if (index !== -1) {
+                let deleted = subscriptions.splice(index, 1);
+                console.log(`=> Da huy thanh cong thue bao ${deleted[0].id}!`);
+            } else {
+                console.log("=> Khong tim thay ma thue bao!");
+            }
+        }
+
+        function startApp() {
+            let menuChoice;
+            do {
+                console.log("\n===== HE THONG QUAN LY THUE BAO CLOUD =====");
+                console.log("1. Them thue bao moi");
+                console.log("2. Xem toan bo danh sach thue bao");
+                console.log("3. Cap nhat goi cuoc");
+                console.log("4. Huy thue bao");
+                console.log("5. Thoat chuong trinh");
+                
+                menuChoice = prompt("Nhap lua chon cua ban (1-5): ");
+
+                switch (menuChoice) {
+                    case "1":
+                        addSubscription();
+                        break;
+                    case "2":
+                        listSubscriptions();
+                        break;
+                    case "3":
+                        updateSubscription();
+                        break;
+                    case "4":
+                        deleteSubscription();
+                        break;
+                    case "5":
+                        console.log("Da thoat chuong trinh. Hen gap lai!");
+                        break;
+                    default:
+                        console.log("Lua chon khong hop le. Vui long nhap tu 1 den 5.");
+                }
+            } while (menuChoice !== "5");
+        }
+
+        startApp();
+    </script>
+</body>
+</html>
